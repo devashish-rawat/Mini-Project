@@ -11,10 +11,7 @@ public class console_app_2
 	{
 		int i=1;
 		
-		
-		String fileName;
-		
-		String year , gender ;
+		String year , gender ,fileName ;
 		
 		System.out.println("Enter male / female");
 		gender=userInput.nextLine();
@@ -23,7 +20,6 @@ public class console_app_2
 		year=userInput.nextLine();
 		
 		fileName = gender + "_cy" + year + "_top" + ".csv";
-		//System.out.println(fileName);
 		
 		File file = new File (fileName);
 		
@@ -31,7 +27,7 @@ public class console_app_2
 		{
 			Scanner inputStream = new Scanner (file);
 			
-			inputStream.next(); //to remove Column Headers
+			inputStream.next();	 //to remove Column Headers
 			inputStream.next();
 			
 			while(i<=10)
