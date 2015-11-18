@@ -3,7 +3,7 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 
-public class console_app_3
+public class console_application
 {
 static Scanner userInput = new Scanner (System.in);
 	
