@@ -3,48 +3,57 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.awt.*;
+import java.awt.Image;
 import javax.swing.*;
 
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartFrame;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
 
-public class gui_3 extends JFrame
+
+public class popular_baby_names extends JFrame
 {
-	JPanel contentPane,contentPane2;
+    JPanel contentPane,contentPane2,BarGraph,introPane;
     JComboBox comboBox1,comboBox2,comboBox3,comboBox4,comboBox5;
-    JButton buttonSubmit,buttonSubmit2,buttonNext,buttonPrev;
-    JLabel labelYear,labelCheckFor,labelShow,labelCheckFor2,labelEnterName,labelFrom;
-    String infoCombo1,infoCombo2,infoCombo3,infoCombo4,infoCombo5,Name;
+    JButton buttonSubmit,buttonSubmit2,buttonNext,buttonPrev,buttonContinue,buttonBrowse,goIntro;
+    JLabel labelYear,labelCheckFor,labelShow,labelCheckFor2,labelEnterName,labelFrom,label,lblNewLabel;
+    String infoCombo1,infoCombo2,infoCombo3,infoCombo4,infoCombo5,Name,Path;
     JTextArea Output,Output2;
     JScrollPane scrollBar,scrollBar2;
     JTextField textField;
- 
-   
+    JFileChooser choose;
+    
 	public static void main(String[] args)
 	{
-		new gui_3();
+		new popular_baby_names();
 	}
 	
-	public gui_3()
+	public popular_baby_names()
 	{
 		String[] Choice1 = {"Male","Female","Both"};
 		String[] Year = {"1944","1945","1946","1947","1948","1949","1950","1951","1952","1953","1954",
-						 "1955","1956","1957","1958","1959","1960","1961","1962","1963","1964","1965","1966",
-						 "1967","1968","1969","1970","1971","1972","1973","1974","1975","1976","1977",
-						 "1978","1979","1980","1981","1982","1983","1984","1985","1986","1987","1988","1989",
-				         "1990","1991","1992","1993","1994","1995","1996","1997","1998","1999","2000",
-				         "2001","2002","2003","2004","2005","2006","2007","2008","2009","2010","2011",
-				         "2012","2013"};
+				 "1955","1956","1957","1958","1959","1960","1961","1962","1963","1964","1965","1966",
+				 "1967","1968","1969","1970","1971","1972","1973","1974","1975","1976","1977",
+			         "1978","1979","1980","1981","1982","1983","1984","1985","1986","1987","1988","1989",
+			         "1990","1991","1992","1993","1994","1995","1996","1997","1998","1999","2000",
+				 "2001","2002","2003","2004","2005","2006","2007","2008","2009","2010","2011",
+				 "2012","2013"};
 		String[] Display = {"Top 5","Top 10","Top 20","Top 50","Top 100","All"};
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setSize(715,747);					 //Dimensions of the Frame
-		this.setLocationRelativeTo(null);		//Location of the Frame on the Screen
-		this.setResizable(false);              //Frame Cannot be Resized
-		this.setTitle("Top 10 Baby Names");
+		this.setSize(715,737);					
+		this.setLocationRelativeTo(null);	
+		this.setResizable(false);         
+		this.setTitle("Popular Baby Names");
 		getContentPane().setLayout(new CardLayout(0, 0));
 		
 		contentPane = new JPanel();
 		getContentPane().add(contentPane, "1");
-		contentPane.setVisible(true);
+		contentPane.setVisible(false);
 		
 		contentPane.setLayout(null);
 		
@@ -89,21 +98,26 @@ public class gui_3 extends JFrame
 		labelShow.setBounds(403, 44, 59, 35);
 		contentPane.add(labelShow);
 		
-		buttonNext = new JButton("Next");
+		buttonNext = new JButton("Check Popularity of a Particular Name");
 		buttonNext.setToolTipText("Search Using a Particular Name");
-		buttonNext.setBounds(555, 658, 97, 25);
+		buttonNext.setBounds(403, 658, 249, 25);
 		contentPane.add(buttonNext);
 		buttonNext.addActionListener(lForButton);
 		
+		goIntro = new JButton("Back");
+		goIntro.setBounds(36, 658, 84, 25);
+		goIntro.addActionListener(lForButton);
+		contentPane.add(goIntro);
 		
-		contentPane2 = new JPanel();					//2nd ContentPane
+		
+		contentPane2 = new JPanel();
 		getContentPane().add(contentPane2, "2");
 		contentPane2.setLayout(null);
 		contentPane2.setVisible(false);
 		
-		buttonPrev = new JButton("Previous");
+		buttonPrev = new JButton("Search Names Using Birth Year");
 		buttonPrev.setToolTipText("Search Using Birth Year");
-		buttonPrev.setBounds(555, 658, 97, 25);
+		buttonPrev.setBounds(420, 658, 232, 25);
 		buttonPrev.addActionListener(lForButton);
 		contentPane2.add(buttonPrev);
 		
@@ -114,6 +128,7 @@ public class gui_3 extends JFrame
 		contentPane2.add(comboBox4);
 		
 		textField = new JTextField();
+		textField.setToolTipText("Enter First Name !!\r\n");
 		textField.setBounds(293, 50, 102, 22);
 		contentPane2.add(textField);
 		textField.setColumns(10);
@@ -137,7 +152,7 @@ public class gui_3 extends JFrame
 		Output2.setFont(new Font("Monospaced", Font.PLAIN, 15));
 		
 		scrollBar2 = new JScrollPane(Output2,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		scrollBar2.setBounds(36, 131, 616, 501);
+		scrollBar2.setBounds(36, 492, 616, 142);
 		contentPane2.add(scrollBar2);
 		
 		labelFrom = new JLabel("From :");
@@ -148,6 +163,61 @@ public class gui_3 extends JFrame
 		comboBox5.setBounds(455, 50, 67, 22);
 		contentPane2.add(comboBox5);
 		
+		BarGraph = new JPanel();	
+		BarGraph.setBackground(Color.WHITE);
+		BarGraph.setBounds(36, 82, 616, 392);
+		contentPane2.add(BarGraph);
+		BarGraph.setLayout(new BoxLayout(BarGraph, BoxLayout.X_AXIS));
+		
+		
+		introPane = new JPanel();
+		getContentPane().add(introPane, "4");
+		introPane.setLayout(null);
+		introPane.setVisible(true);
+		
+		JLabel lblSelectTheFolder = new JLabel("Select the Folder Containing the csv Files.");
+		lblSelectTheFolder.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblSelectTheFolder.setBounds(374, 425, 286, 25);
+		introPane.add(lblSelectTheFolder);
+		
+		buttonBrowse = new JButton("Browse");
+		buttonBrowse.setBounds(374, 454, 97, 25);
+		buttonBrowse.addActionListener(lForButton);
+		introPane.add(buttonBrowse);
+		
+		buttonContinue = new JButton("Next");
+		buttonContinue.setBounds(554, 654, 97, 25);
+		buttonContinue.addActionListener(lForButton);
+		introPane.add(buttonContinue);
+		buttonContinue.setEnabled(false);
+		
+		label = new JLabel("");
+		label.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		label.setBounds(374, 492, 335, 25);
+		introPane.add(label);
+		
+		lblNewLabel = new JLabel("");
+		lblNewLabel.setBounds(0, 0, 366, 712);
+		Image img = new ImageIcon(this.getClass().getResource("/baby.png")).getImage();
+		lblNewLabel.setIcon(new ImageIcon(img));
+		
+		introPane.add(lblNewLabel);
+		
+		JLabel lblPopularBabyNames = new JLabel("Popular Baby Names :");
+		lblPopularBabyNames.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblPopularBabyNames.setBounds(374, 83, 219, 37);
+		introPane.add(lblPopularBabyNames);
+		
+		JLabel lblChecksForNames = new JLabel("-> Checks for Names by Birth Year.");
+		lblChecksForNames.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblChecksForNames.setBounds(374, 146, 286, 16);
+		introPane.add(lblChecksForNames);
+		
+		JLabel lblChecksPopularity = new JLabel("-> Checks Popularity of a Particular Name.");
+		lblChecksPopularity.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblChecksPopularity.setBounds(374, 189, 286, 16);
+		introPane.add(lblChecksPopularity);
+	    
 		this.setVisible(true);
 	
 	}
@@ -156,10 +226,53 @@ public class gui_3 extends JFrame
 	{
 		public void actionPerformed(ActionEvent e)
 		{
+			if(e.getSource()==buttonContinue)
+			{
+				introPane.setVisible(false);
+				contentPane.setVisible(true);
+				contentPane2.setVisible(false);
+			}
+			
+			if(e.getSource()==buttonBrowse)
+			{
+				choose=new JFileChooser();
+				choose.setDialogTitle("Select Folder");
+				choose.setCurrentDirectory(new java.io.File("."));
+				choose.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+				choose.setAcceptAllFileFilterUsed(false);
+				
+			    if (choose.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
+			    {
+			    Path = choose.getSelectedFile().toString();
+			    }
+			    
+			    if(Path.contains("Baby Names 1944-2013"))
+			    {
+			    	
+			    	label.setText("Path : " + Path);
+			    	buttonContinue.setEnabled(true);
+			    }
+			    else
+			    {
+			    	label.setText("Files Not Found !! Try Again !!");
+			    }
+			    
+			    Path = Path + "\\";
+			}
+			
+			if(e.getSource()==goIntro)
+			{
+				introPane.setVisible(true);
+				contentPane.setVisible(false);
+				contentPane2.setVisible(false);
+				
+			}
+			
+			
 			if(e.getSource()==buttonSubmit)
 			{
-				Output.setText("");										//Clears TextField For Next Output
-				scrollBar.getVerticalScrollBar().setValue(0);	       //Scrolls Up 
+				Output.setText("");										
+				scrollBar.getVerticalScrollBar().setValue(0);	     
 				
 				infoCombo1=comboBox1.getSelectedItem().toString();
 				infoCombo2=comboBox2.getSelectedItem().toString();
@@ -176,18 +289,20 @@ public class gui_3 extends JFrame
 			{
 				contentPane.setVisible(false);
 				contentPane2.setVisible(true);
+				introPane.setVisible(false);
 			}
 			
 			if(e.getSource()==buttonPrev)
 			{
 				contentPane.setVisible(true);
 				contentPane2.setVisible(false);
+				introPane.setVisible(false);
 			}
 			
 			if(e.getSource()==buttonSubmit2)
 			{
-				Output2.setText("");								//Clears TextField For Next Output
-				scrollBar2.getVerticalScrollBar().setValue(0);	   //Scrolls Up
+				Output2.setText("");								
+				scrollBar2.getVerticalScrollBar().setValue(0);	   
 				
 				infoCombo4=comboBox4.getSelectedItem().toString();
 				//System.out.println(infoCombo4);
@@ -245,7 +360,7 @@ public class gui_3 extends JFrame
 		String clean ; 
 		
 		
-		File file = new File (fileName);
+		File file = new File (Path + fileName);
 		
 		try
 		{
@@ -261,7 +376,14 @@ public class gui_3 extends JFrame
 				String data = inputStream.next();
 				String []values = data.split(",");
 				clean = removeQuotes (values[0]);
-				no_of_births = extractInt (values[1]);
+				if(values[1].equals("\""))
+				{
+					no_of_births = extractInt (values[2]);
+				}
+				else
+				{
+					no_of_births = extractInt (values[1]);
+				}
 				rank = extractInt (values[2]);
 				//System.out.println(rank);
 				if(rank > show)
@@ -296,8 +418,8 @@ public class gui_3 extends JFrame
 		//System.out.println(fileName1);
 		//System.out.println(fileName2);
 		
-		File file1 = new File (fileName1);
-		File file2 = new File (fileName2);
+		File file1 = new File (Path + fileName1);
+		File file2 = new File (Path + fileName2);
 		
 		try
 		{
@@ -393,6 +515,13 @@ public class gui_3 extends JFrame
 		Name=Name.toUpperCase();
 		//System.out.println(Name);
 		
+		
+		DefaultCategoryDataset data = new DefaultCategoryDataset();				//Bar Chart
+		
+		JFreeChart jchart = ChartFactory.createBarChart("","Year","No of Births",data);
+		CategoryPlot plot = jchart.getCategoryPlot();
+		plot.setRangeGridlinePaint(Color.black);
+
 		Output2.append("YEAR" + "\t\t" + "NUMBER OF BIRTHS\n");
 		for(i=year;i<=2013;i++)
 		{
@@ -401,7 +530,7 @@ public class gui_3 extends JFrame
 			fileName=choice1 + "_cy" + i + "_top.csv";
 			//System.out.println(fileName);
 			
-			File file3 = new File (fileName);
+			File file3 = new File (Path + fileName);
 			
 			try
 			{
@@ -412,17 +541,26 @@ public class gui_3 extends JFrame
 				
 				while(inputStream3.hasNext())
 				{
-					String data = inputStream3.next();
-					String []values = data.split(",");
+					String datas = inputStream3.next();
+					String []values = datas.split(",");
+					if(values[1].equals("\""))
+					{
+						no_of_births = extractInt (values[2]);
+					}
+					else
+					{
+						no_of_births = extractInt (values[1]);
+					}
 					clean = removeQuotes (values[0]);
-					no_of_births = extractInt (values[1]);
-					
+			
 					if(clean.equals(Name))
 					{
 						nof=Integer.toString(no_of_births);
 						Output2.append(i + "\t\t");
 						Output2.append(nof + "\n");
 						flag=1;
+						data.setValue(no_of_births,"No of Births",Integer.toString(i));	
+						
 						break;
 					}
 
@@ -438,17 +576,23 @@ public class gui_3 extends JFrame
 			{
 				Output2.append(i + "\t\t");
 				Output2.append("0"+"\n");
+				data.setValue(0,"No of Births",Integer.toString(i));	
 			}
 		}
+		
+		ChartFrame chartFrm = new ChartFrame("Student",jchart,true);
+	
+		ChartPanel chartPanel = new ChartPanel(jchart);
+		BarGraph.removeAll();
+		BarGraph.add(chartPanel);
+		BarGraph.updateUI();
 	}
 	
 	public int extractInt (String str)
 	{
 		int intValue;
 		
-		str=str.replaceAll("[^0-9]", "");		//Extracts Integer values from String
-		
-		//System.out.println(str);
+		str=str.replaceAll("[^0-9]", "");	
 		
 		intValue = Integer.parseInt(str);
 		
@@ -459,10 +603,8 @@ public class gui_3 extends JFrame
 	{
 		String clean;
 		
-		clean=str.replaceAll("\"", "");			//Removes " " from String 
-		
-		//System.out.println(clean);
-		
+		clean=str.replaceAll("\"", "");			
+	
 		return (clean);	
 	}
 }
